@@ -81,6 +81,22 @@ type FakeVolumeRepository struct {
 		result1 db.CreatingVolume
 		result2 error
 	}
+	CreateVolumeWithHandleStub        func(string, int, string, db.VolumeType) (db.CreatingVolume, error)
+	createVolumeWithHandleMutex       sync.RWMutex
+	createVolumeWithHandleArgsForCall []struct {
+		arg1 string
+		arg2 int
+		arg3 string
+		arg4 db.VolumeType
+	}
+	createVolumeWithHandleReturns struct {
+		result1 db.CreatingVolume
+		result2 error
+	}
+	createVolumeWithHandleReturnsOnCall map[int]struct {
+		result1 db.CreatingVolume
+		result2 error
+	}
 	DestroyFailedVolumesStub        func() (int, error)
 	destroyFailedVolumesMutex       sync.RWMutex
 	destroyFailedVolumesArgsForCall []struct {
@@ -620,6 +636,72 @@ func (fake *FakeVolumeRepository) CreateVolumeReturnsOnCall(i int, result1 db.Cr
 		})
 	}
 	fake.createVolumeReturnsOnCall[i] = struct {
+		result1 db.CreatingVolume
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeVolumeRepository) CreateVolumeWithHandle(arg1 string, arg2 int, arg3 string, arg4 db.VolumeType) (db.CreatingVolume, error) {
+	fake.createVolumeWithHandleMutex.Lock()
+	ret, specificReturn := fake.createVolumeWithHandleReturnsOnCall[len(fake.createVolumeWithHandleArgsForCall)]
+	fake.createVolumeWithHandleArgsForCall = append(fake.createVolumeWithHandleArgsForCall, struct {
+		arg1 string
+		arg2 int
+		arg3 string
+		arg4 db.VolumeType
+	}{arg1, arg2, arg3, arg4})
+	fake.recordInvocation("CreateVolumeWithHandle", []interface{}{arg1, arg2, arg3, arg4})
+	fake.createVolumeWithHandleMutex.Unlock()
+	if fake.CreateVolumeWithHandleStub != nil {
+		return fake.CreateVolumeWithHandleStub(arg1, arg2, arg3, arg4)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.createVolumeWithHandleReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeVolumeRepository) CreateVolumeWithHandleCallCount() int {
+	fake.createVolumeWithHandleMutex.RLock()
+	defer fake.createVolumeWithHandleMutex.RUnlock()
+	return len(fake.createVolumeWithHandleArgsForCall)
+}
+
+func (fake *FakeVolumeRepository) CreateVolumeWithHandleCalls(stub func(string, int, string, db.VolumeType) (db.CreatingVolume, error)) {
+	fake.createVolumeWithHandleMutex.Lock()
+	defer fake.createVolumeWithHandleMutex.Unlock()
+	fake.CreateVolumeWithHandleStub = stub
+}
+
+func (fake *FakeVolumeRepository) CreateVolumeWithHandleArgsForCall(i int) (string, int, string, db.VolumeType) {
+	fake.createVolumeWithHandleMutex.RLock()
+	defer fake.createVolumeWithHandleMutex.RUnlock()
+	argsForCall := fake.createVolumeWithHandleArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeVolumeRepository) CreateVolumeWithHandleReturns(result1 db.CreatingVolume, result2 error) {
+	fake.createVolumeWithHandleMutex.Lock()
+	defer fake.createVolumeWithHandleMutex.Unlock()
+	fake.CreateVolumeWithHandleStub = nil
+	fake.createVolumeWithHandleReturns = struct {
+		result1 db.CreatingVolume
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeVolumeRepository) CreateVolumeWithHandleReturnsOnCall(i int, result1 db.CreatingVolume, result2 error) {
+	fake.createVolumeWithHandleMutex.Lock()
+	defer fake.createVolumeWithHandleMutex.Unlock()
+	fake.CreateVolumeWithHandleStub = nil
+	if fake.createVolumeWithHandleReturnsOnCall == nil {
+		fake.createVolumeWithHandleReturnsOnCall = make(map[int]struct {
+			result1 db.CreatingVolume
+			result2 error
+		})
+	}
+	fake.createVolumeWithHandleReturnsOnCall[i] = struct {
 		result1 db.CreatingVolume
 		result2 error
 	}{result1, result2}
@@ -1622,6 +1704,8 @@ func (fake *FakeVolumeRepository) Invocations() map[string][][]interface{} {
 	defer fake.createTaskCacheVolumeMutex.RUnlock()
 	fake.createVolumeMutex.RLock()
 	defer fake.createVolumeMutex.RUnlock()
+	fake.createVolumeWithHandleMutex.RLock()
+	defer fake.createVolumeWithHandleMutex.RUnlock()
 	fake.destroyFailedVolumesMutex.RLock()
 	defer fake.destroyFailedVolumesMutex.RUnlock()
 	fake.destroyUnknownVolumesMutex.RLock()
